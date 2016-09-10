@@ -1,0 +1,1 @@
+This folder is used to store serialized player objects.  Eventually we might organize it to contain folders of object types
