@@ -36,14 +36,42 @@ public class PlayerTerminal extends JFrame {
      * @param args
      */
     public static void main(String[] args) {
+        try {
+            /*
+            UIManager.setLookAndFeel("com.jtattoo.plaf.aluminium.AluminiumLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.luna.LunaLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.fast.FastLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.bernstein.BernsteinLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.aero.AeroLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.graphite.GraphiteLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
+            */
+
+            //dark UI
+            UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
+
+        }
+        catch (UnsupportedLookAndFeelException e) {
+        }
+        catch (ClassNotFoundException e) {
+        }
+        catch (InstantiationException e) {
+        }
+        catch (IllegalAccessException e) {
+        }
+
         String host = "localhost";
+        String playerName = "josh";
         /*
         String host = JOptionPane.showInputDialog(
                 "Enter the host name of the\ncomputer that hosts the server:");
         if (host == null || host.trim().length() == 0)
             return;
         */
-        String playerName = JOptionPane.showInputDialog(
+        playerName = JOptionPane.showInputDialog(
                 "enter username");
         if (playerName == null || playerName.trim().length() == 0)
             return;
@@ -142,7 +170,7 @@ public class PlayerTerminal extends JFrame {
         setBackground(Color.BLACK);
         transcript = new JTextPane();
         transcript.setFocusable(false);
-        transcript.setMargin(new Insets(5, 5, 5, 5));
+        //transcript.setMargin(new Insets(5, 5, 5, 5));
         transcript.setBackground(Color.BLACK);
         JScrollPane scrollPane = new JScrollPane(transcript);
         scrollPane.setPreferredSize(new Dimension(300, 500));
@@ -264,8 +292,6 @@ public class PlayerTerminal extends JFrame {
         transcript.setCharacterAttributes(attributeSet, false);
         transcript.replaceSelection(message);
     }
-
-
 
 }
 
