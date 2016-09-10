@@ -170,7 +170,6 @@ public class PlayerTerminal extends JFrame {
         setBackground(Color.BLACK);
         transcript = new JTextPane();
         transcript.setFocusable(false);
-        //transcript.setMargin(new Insets(5, 5, 5, 5));
         transcript.setBackground(Color.BLACK);
         JScrollPane scrollPane = new JScrollPane(transcript);
         scrollPane.setPreferredSize(new Dimension(300, 500));
