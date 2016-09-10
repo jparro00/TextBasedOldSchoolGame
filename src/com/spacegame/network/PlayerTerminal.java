@@ -26,8 +26,6 @@ public class PlayerTerminal extends JFrame {
     private final Color DEFAULT_TEXT_COLOR = Color.GREEN;
 
     private JTextField messageInput;   // For entering commands sent to the server
-    private JButton sendButton;        // Sends the contents of the messageInput.
-    private JButton quitButton;        // Leaves the client cleanly, by sending a DisconnectMessage
     private TradeWarsClient connection;      // Represents the connection to the Hub; used to send and process messages;
     private volatile boolean connected; // This is true while the client is connected to the hub.
     private String playerName;
@@ -102,7 +100,6 @@ public class PlayerTerminal extends JFrame {
         @Override
         protected void connectionClosedByError(String message) {
             addToTranscript("Sorry, communication has shut down due to an error:\n     " + message);
-            sendButton.setEnabled(false);
             messageInput.setEnabled(false);
             messageInput.setEditable(false);
             messageInput.setText("");
@@ -141,28 +138,20 @@ public class PlayerTerminal extends JFrame {
     private PlayerTerminal(final String host, final String playerName) {
         super("TradeWards Client");
         this.playerName = playerName;
+        this.setPreferredSize(new Dimension(500, 600));
         setBackground(Color.BLACK);
-        setLayout(new BorderLayout(2, 2));
         transcript = new JTextPane();
         transcript.setFocusable(false);
         transcript.setMargin(new Insets(5, 5, 5, 5));
         transcript.setBackground(Color.BLACK);
         JScrollPane scrollPane = new JScrollPane(transcript);
-        scrollPane.setSize(30, 60);
         scrollPane.setPreferredSize(new Dimension(300, 500));
         add(scrollPane, BorderLayout.CENTER);
 
-
-
-        sendButton = new JButton("send");
-        quitButton = new JButton("quit");
-        messageInput = new JTextField(40);
-        messageInput.setMargin(new Insets(3, 3, 3, 3));
+        messageInput = new JTextField();
+        messageInput.setPreferredSize(new Dimension(500, 30));
         ActionHandler ah = new ActionHandler();
-        sendButton.addActionListener(ah);
-        quitButton.addActionListener(ah);
         messageInput.addActionListener(ah);
-        sendButton.setEnabled(false);
         messageInput.setEditable(false);
         messageInput.setEnabled(false);
 
@@ -170,13 +159,9 @@ public class PlayerTerminal extends JFrame {
         messageInput.setForeground(DEFAULT_TEXT_COLOR);
 
         JPanel bottom = new JPanel();
-        bottom.setBackground(Color.LIGHT_GRAY);
+        bottom.setLayout(new BorderLayout());
         bottom.setBackground(Color.BLACK);
-        //bottom.add(new JLabel("You say:"));
-        bottom.add(messageInput);
-        bottom.add(sendButton);
-        bottom.add(Box.createHorizontalStrut(30));
-        bottom.add(quitButton);
+        bottom.add(messageInput, BorderLayout.CENTER);
         add(bottom,BorderLayout.SOUTH);
         pack();
         addWindowListener( new WindowAdapter() { // calls doQuit if user closes window
@@ -197,7 +182,6 @@ public class PlayerTerminal extends JFrame {
                     connected = true;
                     messageInput.setEditable(true);
                     messageInput.setEnabled(true);
-                    sendButton.setEnabled(true);
                     messageInput.requestFocus();
                 }
                 catch (IOException e) {
@@ -240,10 +224,7 @@ public class PlayerTerminal extends JFrame {
     private class ActionHandler implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
             Object src = evt.getSource();
-            if (src == quitButton) {  // Disconnect from the server and end the program.
-                doQuit();
-            }
-            else if (src == sendButton || src == messageInput) {
+            if (src == messageInput) {
                 String message = messageInput.getText();
 
                 //don't send null requests
