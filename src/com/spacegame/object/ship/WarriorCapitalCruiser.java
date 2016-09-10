@@ -1,6 +1,4 @@
-package com.spacegame.ships;
-
-import com.spacegame.player.player;
+package com.spacegame.object.ship;
 
 public class WarriorCapitalCruiser extends AbstractShip {
 

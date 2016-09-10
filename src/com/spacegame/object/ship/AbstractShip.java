@@ -1,6 +1,6 @@
-package com.spacegame.ships;
+package com.spacegame.object.ship;
 
-import com.spacegame.player.player;
+import com.spacegame.game.Player;
 
 public abstract class AbstractShip {
 
@@ -15,12 +15,12 @@ public abstract class AbstractShip {
 	private int maxDroneCount;
 	private double speed;
 	private String name;
-	private player owner;
+	private Player owner;
 	boolean hasWarp;
 	private Type type;
 
 	public AbstractShip(int cargoHolds, int shipCost, int heath, int maxHealth, int shields, int maxShields, int power,
-			int droneCount, int maxDroneCount, String name, boolean hasWarp, Type type, double speed, player owner) {
+			int droneCount, int maxDroneCount, String name, boolean hasWarp, Type type, double speed, Player owner) {
 
 		this.cargoHolds = cargoHolds;
 		this.shipCost = shipCost;
@@ -130,11 +130,11 @@ public abstract class AbstractShip {
 		this.name = name;
 	}
 
-	public player getOwner() {
+	public Player getOwner() {
 		return owner;
 	}
 
-	public void setOwner(player owner) {
+	public void setOwner(Player owner) {
 		this.owner = owner;
 	}
 

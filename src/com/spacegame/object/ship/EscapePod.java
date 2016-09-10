@@ -1,4 +1,4 @@
-package com.spacegame.ships;
+package com.spacegame.object.ship;
 
 public class EscapePod extends AbstractShip {
 
