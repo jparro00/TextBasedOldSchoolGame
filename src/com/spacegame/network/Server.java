@@ -4,15 +4,16 @@ import com.spacegame.game.Player;
 import netgame.common.Hub;
 import netgame.common.DisconnectMessage;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -20,8 +21,10 @@ import java.util.Map;
  */
 public class Server extends Hub{
 
+
     private final static int PORT = 37829;
     private final static String DIRECTORY_SAVE = "./sav/";
+    private final static Logger log = LogManager.getLogger(Server.class);
 
     private Map<Integer, Player> playerIdMap;
 
@@ -49,9 +52,9 @@ public class Server extends Hub{
 
     @Override
     public void messageReceived(int playerID, java.lang.Object message){
-        System.out.println("messageReceived()");
-        System.out.println("playerID: " + playerID);
-        System.out.println("message: " + message);
+        log.debug("messageReceived()");
+        log.debug("playerID: " + playerID);
+        log.debug("message: " + message);
 
         if(message instanceof Request){
 
@@ -69,10 +72,14 @@ public class Server extends Hub{
 
     @Override
     protected void playerConnected(int playerID) {
+
     }
 
     @Override
     protected void playerDisconnected(int playerID) {
+        log.info("Enter playerDisconnected()");
+        log.debug("param playerID: " + playerID);
+
         Response response = new Response("player " + playerIdMap.get(playerID) + " has left the game");
         sendToAll(response);
         Player player = playerIdMap.remove(playerID);
@@ -84,9 +91,10 @@ public class Server extends Hub{
         ){
             oos.writeObject(player);
         }catch (IOException io){
+            log.error(io);
             io.printStackTrace();
         }
-
+        log.info("Enter playerDisconnected()");
     }
 
     /**
@@ -102,13 +110,16 @@ public class Server extends Hub{
     @Override
     protected void extraHandshake(int playerID, ObjectInputStream in,
                                   ObjectOutputStream out) throws IOException {
-        System.out.println("enter extraHandshake()");
+        class Local {};
+        String methodName = Local.class.getEnclosingMethod().getName();
+        log.info("enter " + methodName + "()");
+
         try{
             String playerName = (String)in.readObject();
-            System.out.println("playerName: " + playerName);
+            log.debug("playerName: " + playerName);
 
-            System.out.println("playerIdMap: " + playerIdMap);
-            System.out.println("player exists: " + playerIdMap.containsValue(playerID));
+            log.debug("playerIdMap: " + playerIdMap);
+            log.debug("player exists: " + playerIdMap.containsValue(playerID));
             boolean playerAlreadyRegistered = false;
             for(Player player : playerIdMap.values()){
                 if(playerName.equals(player.getName())){
@@ -117,7 +128,7 @@ public class Server extends Hub{
                 }
             }
             if(playerAlreadyRegistered){
-                System.out.println("disconnecting client");
+                log.debug("disconnecting client");
                 DisconnectMessage disconnectMessage = new DisconnectMessage("Username " + playerName + " is already in use");
                 out.writeObject(disconnectMessage);
                 out.flush();
@@ -128,10 +139,10 @@ public class Server extends Hub{
                 out.flush();
             }
 
-        }catch (ClassNotFoundException ex){
+        }catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        System.out.println("exit extraHandshake()");
+        log.info("exit " + methodName + "()");
     }
 
     /**
@@ -142,7 +153,7 @@ public class Server extends Hub{
      * @return
      */
     public Player initializePlayer(int playerID, String playerName){
-        System.out.println("enter initializePlayer()");
+        log.debug("enter initializePlayer()");
 
         Player player;
 
@@ -155,7 +166,7 @@ public class Server extends Hub{
             ){
                 player = (Player)ois.readObject();
             }catch (IOException | ClassCastException | ClassNotFoundException ex) {
-                System.out.println("unable to load player save file.  Initializing new player");
+                log.debug("unable to load player save file.  Initializing new player");
                 ex.printStackTrace();
 
                 //initialize new player if there was an issue loading the file
@@ -163,7 +174,7 @@ public class Server extends Hub{
             }
         }
         else {
-            System.out.println("Creating new player");
+            log.debug("Creating new player");
             player = new Player(playerName);
         }
 

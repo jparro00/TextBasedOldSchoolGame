@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 /**
  * Created by jparrott on 9/3/2016.
  */
@@ -24,6 +27,7 @@ public class PlayerTerminal extends JFrame {
 
     private final static int PORT = 37829;
     private final Color DEFAULT_TEXT_COLOR = Color.GREEN;
+    private final static Logger log = LogManager.getLogger(PlayerTerminal.class);
 
     private JTextField messageInput;   // For entering commands sent to the server
     private TradeWarsClient connection;      // Represents the connection to the Hub; used to send and process messages;
@@ -102,23 +106,22 @@ public class PlayerTerminal extends JFrame {
          */
         @Override
         protected void messageReceived(Object message) {
-            System.out.println("messageReceieved()");
-            System.out.println(message);
+            log.info("Enter messageReceieved()");
+            log.debug("param message: " + message);
             try{
-                System.out.println("inside try");
                 Response response = (Response)message;
-                System.out.println(response.getBody());
+                log.debug("response.body: " + response.getBody());
                 if(response.isClearRequest()){
                     transcript.setText(null);
                 }
                 addToTranscript(response.getBody());
 
             } catch (ClassCastException cc){
-                System.out.println("inside catch");
-                cc.printStackTrace();
-                addToTranscript(cc.getMessage());
+                log.error(cc);
+                //print the error to the transcript
+                addToTranscript("An error has occured:\n" + cc.getMessage());
             }
-            System.out.println("outside try");
+            log.info("Exit messageReceieved()");
         }
 
         /**
@@ -138,13 +141,14 @@ public class PlayerTerminal extends JFrame {
         @Override
         protected void extraHandshake(ObjectInputStream in, ObjectOutputStream out)
                 throws IOException {
-            System.out.println("enter extraHandshake()");
+            log.info("Enter extraHandshake()");
+
             out.writeObject(playerName);
             out.flush();
             try{
                 Object response = in.readObject();
                 if(response instanceof DisconnectMessage){
-                    System.out.println("recieved disconnect message");
+                    log.debug("recieved disconnect message");
                     addToTranscript(((DisconnectMessage) response).message);
                     disconnect();
                 }
@@ -152,9 +156,10 @@ public class PlayerTerminal extends JFrame {
                     addToTranscript((String)response);
                 }
             } catch (ClassNotFoundException ex){
-                ex.printStackTrace();
+                log.error(ex);
             }
-            System.out.println("exit extraHandshake()");
+
+            log.info("Exit extraHandshake()");
         }
     } // end nested class TradeWarsClient
 
@@ -224,6 +229,8 @@ public class PlayerTerminal extends JFrame {
      * the window by clicking its close box.
      */
     private void doQuit() {
+        log.info("Enter doQuit()");
+
         if (connected)
             connection.disconnect();  // Sends a DisconnectMessage to the server.
         dispose();
@@ -232,6 +239,8 @@ public class PlayerTerminal extends JFrame {
         }
         catch (InterruptedException e) {
         }
+
+        log.info("Exit doQuit()");
         System.exit(0);
     }
 
@@ -241,7 +250,9 @@ public class PlayerTerminal extends JFrame {
      * @return
      */
     private Request buildRequest(String message){
+        log.info("Enter buildRequest()");
         Request request = new Request(message);
+        log.info("Exit buildRequest()");
         return request;
     }
 
@@ -277,8 +288,12 @@ public class PlayerTerminal extends JFrame {
         addToTranscript(message, DEFAULT_TEXT_COLOR);
     }
 
-    public void addToTranscript(String message, Color color)
-    {
+    public void addToTranscript(String message, Color color){
+        log.info("Enter addToTranscript()");
+
+        log.debug("message: " + message);
+        log.debug("color: " + color);
+
         message += "\n";
         StyleContext styleContext = StyleContext.getDefaultStyleContext();
         AttributeSet attributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
@@ -290,6 +305,8 @@ public class PlayerTerminal extends JFrame {
         transcript.setCaretPosition(len);
         transcript.setCharacterAttributes(attributeSet, false);
         transcript.replaceSelection(message);
+
+        log.info("Exit addToTranscript()");
     }
 
 }
