@@ -19,18 +19,22 @@ public class RenderRequest implements Serializable{
     private String body;
     private List<Alert> alerts;
 
+    public RenderRequest(String body) {
+        this(new HashMap<String, String>(), body, new ArrayList<Alert>());
+    }
+
+    /**
+     * Primary constructor
+     * @param headers
+     * @param body
+     * @param alerts
+     */
     public RenderRequest(Map<String, String> headers, String body, List<Alert> alerts) {
         this.headers = headers;
         this.body = body;
         this.alerts = alerts;
     }
 
-    public RenderRequest(String body) {
-        this.body = body;
-        this.headers = new HashMap<>();
-        this.alerts = new ArrayList<>();
-
-    }
 
     public List<Alert> getAlerts() {
         return alerts;
@@ -40,8 +44,11 @@ public class RenderRequest implements Serializable{
         this.alerts = alerts;
     }
 
-    public void addAlert(Alert alert){
-        this.alerts.add(alert);
+    public boolean addAlert(Alert alert){
+        if(alerts == null){
+            alerts = new ArrayList<>();
+        }
+        return this.alerts.add(alert);
     }
 
     public void setClearRequest(boolean clear){
