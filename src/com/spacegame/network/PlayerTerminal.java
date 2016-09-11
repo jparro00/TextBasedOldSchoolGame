@@ -102,19 +102,19 @@ public class PlayerTerminal extends JFrame {
         }
 
         /**
-         * Processes Response objects from the server
+         * Processes RenderRequest objects from the server
          */
         @Override
         protected void messageReceived(Object message) {
             log.info("Enter messageReceieved()");
             log.debug("param message: " + message);
             try{
-                Response response = (Response)message;
-                log.debug("response.body: " + response.getBody());
-                if(response.isClearRequest()){
+                RenderRequest renderRequest = (RenderRequest)message;
+                log.debug("renderRequest.body: " + renderRequest.getBody());
+                if(renderRequest.isClearRequest()){
                     transcript.setText(null);
                 }
-                addToTranscript(response.getBody());
+                addToTranscript(renderRequest.getBody());
 
             } catch (ClassCastException cc){
                 log.error(cc);

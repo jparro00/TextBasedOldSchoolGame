@@ -61,11 +61,11 @@ public class Server extends Hub{
             Request request = (Request)message;
             String command = request.getCommand();
 
-            Response response = new Response("Recieved message: " + command);
-            if(Response.HEADER_CLEAR_REQUEST.equals(command)){
-                response.setClearRequest(true);
+            RenderRequest renderRequest = new RenderRequest("Recieved message: " + command);
+            if(RenderRequest.HEADER_CLEAR_REQUEST.equals(command)){
+                renderRequest.setClearRequest(true);
             }
-            sendToOne(playerID, response);
+            sendToOne(playerID, renderRequest);
 
         }
     }
@@ -80,8 +80,8 @@ public class Server extends Hub{
         log.info("Enter playerDisconnected()");
         log.debug("param playerID: " + playerID);
 
-        Response response = new Response("player " + playerIdMap.get(playerID) + " has left the game");
-        sendToAll(response);
+        RenderRequest renderRequest = new RenderRequest("player " + playerIdMap.get(playerID) + " has left the game");
+        sendToAll(renderRequest);
         Player player = playerIdMap.remove(playerID);
 
         //Save player object for the next time the player joins
@@ -179,7 +179,7 @@ public class Server extends Hub{
         }
 
         playerIdMap.put(playerID, player);
-        sendToAll(new Response("player " + playerName + " has joined the game"));
+        sendToAll(new RenderRequest("player " + playerName + " has joined the game"));
         return player;
     }
 
