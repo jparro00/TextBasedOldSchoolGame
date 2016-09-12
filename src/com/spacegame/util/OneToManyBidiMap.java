@@ -10,7 +10,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by jparrott on 9/11/2016.
+ * Map that allows bidirectional lookup between key and values.  This is based off of Apache Commons class BidiMap,
+ * however OneToManyBidiMap doesn't have the restriction that values must be unique.  Doing a revers lookup on
+ * the map (i.e., searching for keys based on a value) will return a HashSet of the keys.
+ *
+ * @param <K>
+ * @param <V>
  */
 public class OneToManyBidiMap<K, V> extends HashMap<K, V>{
 
