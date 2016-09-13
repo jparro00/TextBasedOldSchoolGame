@@ -3,7 +3,7 @@ package com.spacegame.object;
 import com.spacegame.game.Renderable;
 
 /**
- * Created by jparrott on 9/3/2016.
+ * Created by jparrott on 9/3/2016. testing github
  */
 public class Planet implements Renderable{
     private int poulation;
