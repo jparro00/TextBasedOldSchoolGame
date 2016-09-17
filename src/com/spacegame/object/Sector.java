@@ -47,8 +47,8 @@ public class Sector implements Renderable {
     }
 
     public static void main(String[] args){
-        Sector sector = new Sector(0,0,new Planet(), new TradePort(), 0);
-        System.out.println(sector.getName());
+        //Sector sector = new Sector(0,0,new Planet(), new TradePort(), 0);
+        //System.out.println(sector.getName());
     }
 }
 
