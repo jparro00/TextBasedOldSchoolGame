@@ -43,6 +43,7 @@ public class Sector implements Renderable {
 
     //randomly generate a sector with a planet and a tradeport
     public static Sector generate(int x, int y){
+
         return new Sector(x, y, null, null, 0);
     }
 
@@ -50,6 +51,18 @@ public class Sector implements Renderable {
         Sector sector = new Sector(0,0,new Planet(), new TradePort(), 0);
         System.out.println(sector.getName());
     }
+    public void setPlanet(){
+        this.planet = new Planet();
+    }
+    public boolean hasPlanet(){
+        if(planet ==null)return false;
+        else return true;
+    }
+    public boolean hasTradePort(){
+        if(tradePort ==null)return false;
+        else return true;
+    }
+
 }
 
 

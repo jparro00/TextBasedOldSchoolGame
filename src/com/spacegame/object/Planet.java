@@ -3,10 +3,11 @@ package com.spacegame.object;
 import com.spacegame.game.Renderable;
 
 /**
- * Created by jparrott on 9/3/2016. testing github
+ * Created by jparrott on 9/3/2016.
  */
 public class Planet implements Renderable{
-    private int poulation;
+    public static int numofPlanets;
+    private int population;
     private int size;
     private int drones;
     //private Resource resources;
@@ -18,11 +19,24 @@ public class Planet implements Renderable{
     private int devLevel;
     //private int maxDockingNum;
     private String name;
+    public Planet(){
+        numofPlanets++;
+        this.population = 1000;
+        this.size = 1;
+        this.drones = 0;
+        this.food = 1000;
+        this.fuel = 500;
+        this.equipment = 300;
+        this.numOfGuns = 0;
+        this.devLevel = 0;
+        this.name = "PLanet"+numofPlanets;
+    }
 
     public Planet(int poulation, int size, int drones, int food, int fuel,
                    int equipment, int numOfGuns, int devLevel, String name) {
         super();
-        this.poulation = poulation;
+        numofPlanets++;
+        this.population = population;
         this.size = size;
         this.drones = drones;
         this.food = food;
@@ -37,11 +51,11 @@ public class Planet implements Renderable{
     }
 
     public int getPoulation() {
-        return poulation;
+        return population;
     }
 
     public void setPoulation(int poulation) {
-        this.poulation = poulation;
+        this.population = poulation;
     }
 
     public int getSize() {
